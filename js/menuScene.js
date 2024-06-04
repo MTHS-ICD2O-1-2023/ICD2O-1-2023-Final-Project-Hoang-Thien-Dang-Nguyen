@@ -9,7 +9,7 @@ class MenuScene extends Phaser.Scene {
     constructor() {
       super({ key: "menuScene" })
       this.menuSceneBackgroundImage = null
-      this.gameStartTextStyle = { font: '40px Arial', fill: '#FFD700', align: 'center' }
+      this.gameStartTextStyle = { font: '40px Arial', fill: '#000000', align: 'center' }
   
     }
     /**  
