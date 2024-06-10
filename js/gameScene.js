@@ -27,12 +27,6 @@ class GameScene extends Phaser.Scene {
     this.coinGroup.add(anCoin)
     setTimeout(_ => this.createCoin(), Phaser.Math.Between(10000,25000))
   }
-  collectCoin() {
-    this.coin.destroy()
-    this.score = this.score + 1
-    this.scoreText.setText('Score: ' + this.score.toString())
-    this.createAlien()
-  }
 
   constructor() {
     super({ key: "gameScene" })
@@ -67,15 +61,21 @@ class GameScene extends Phaser.Scene {
     this.scoreText = this.add.text(10, 10, 'Score: ' + this.score.toString(), this.scoreTextStyle)
 
     this.car = this.physics.add.sprite(1920 / 2, 1080 - 100 , "car")
+    this.car.setCollideWorldBounds(true)
 
     this.coinGroup = this.add.group()
     this.coinGroup.enableBody = true
     this.createCoin()
 
-    this.physics.add.overlap(this.car, this.coinGroup,this.collectCoin)
-
     this.carGroup = this.add.group()
     this.createCar()
+
+    this.physics.add.collider(this.car, this.coinGroup,function(playerCollide, coinCollide) {
+      coinCollide.destroy() 
+      this.score = this.score + 1
+      this.scoreText.setText('Score: ' + this.score.toString())
+      this.createCar()
+    })
 
     this.physics.add.collider(this.car, this.carGroup, function (carCollide, othercarCollide) {
       this.physics.pause()
