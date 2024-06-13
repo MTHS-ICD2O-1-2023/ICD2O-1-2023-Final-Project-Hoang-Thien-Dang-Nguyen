@@ -14,7 +14,7 @@ class GameScene extends Phaser.Scene {
     anCar.body.velocity.y = 200
     anCar.body.velocity.x = carXVelocity
     this.carGroup.add(anCar)
-    setTimeout(_ => this.createCar(), Phaser.Math.Between(200,500))
+    setTimeout(_ => this.createCar(), Phaser.Math.Between(500,1000))
   }
 
   constructor() {
@@ -23,24 +23,22 @@ class GameScene extends Phaser.Scene {
     this.background = null
     this.car = null
     this.gameOverTextStyle = { font: '65px Arial', fill: '#ff0000', align: 'center' }
+    this.gameEndTextStyle = {font: '65px Arial', fill: '#FFD700', align: 'center'}
   }
   /**  
   @param { object } data 
   */
   init(data) {
-    this.cameras.main.setBackgroundColor("#0x5f6e7a")
+    this.cameras.main.setBackgroundColor("#000000")
   }
 
   preload() {
     console.log("Game Scene")
-    this.load.image("roadBackground","./asset/gameScene.jpg")
     this.load.image("car","./asset/car_black_1.png")
     this.load.image("otherCar", "asset/car_blue_1.png")
   }
   /**@param {object} data */
   create(data) {
-    this.background = this.add.image(0, 0, "roadBackground")
-    this.background.setOrigin(0,0)
 
     this.car = this.physics.add.sprite(1920 / 2, 1080 - 100 , "car")
     this.car.setCollideWorldBounds(true)
@@ -58,7 +56,7 @@ class GameScene extends Phaser.Scene {
     }.bind(this)) 
 
     this.startTime = new Date()
-    this.totalTime = 120
+    this.totalTime = 5
     this.creatTimer()
     this.updateTimer()
   }
@@ -84,14 +82,17 @@ class GameScene extends Phaser.Scene {
         this.car.x = 1920
       }
     }
+
     if (this.timeElapsed >= this.totalTime){
-      this.gameOverText=this.add.text(1920/2, 1080/2, 'Congratulation\nClick to play again', this.gameOverTextStyle).setOrigin(0.5)
-      this.gameOverText.setInteractive({useHandCursor:true})
-      this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
+      this.physics.pause()
+      this.gameEndText=this.add.text(1920/2, 1080/2, 'Congratulation you won the game!!!\nClick to play again', this.gameEndTextStyle).setOrigin(0.5)
+      this.gameEndText.setInteractive({useHandCursor:true})
+      this.gameEndText.on('pointerdown', () => this.scene.start('gameScene'))
     }
   }
+  
   creatTimer() {
-    this.timeLabel = this.add.text(this.game.world, 100, "00:00",{font:"100px Arial", fill: "#000000"})
+    this.timeLabel = this.add.text(this.game.world, 100, "00:00",{font:"100px Arial", fill: "#F0F0F0"})
     this.timeLabel.setOrigin(0,0)
     this.timeLabel.align = 'center'
   }
@@ -110,6 +111,8 @@ class GameScene extends Phaser.Scene {
     let result = (minute<10) ? ":0" + second : ":" + second
 
     this.timeLabel.text = result
+
+    setTimeout(_ => this.updateTimer(), Phaser.Math.Between(1000,1000))
   }
 }
 
