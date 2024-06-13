@@ -56,7 +56,7 @@ class GameScene extends Phaser.Scene {
     }.bind(this)) 
 
     this.startTime = new Date()
-    this.totalTime = 5
+    this.totalTime = 120
     this.creatTimer()
     this.updateTimer()
   }
