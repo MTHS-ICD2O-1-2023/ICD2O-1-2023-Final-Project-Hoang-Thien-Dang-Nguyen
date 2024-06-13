@@ -14,18 +14,7 @@ class GameScene extends Phaser.Scene {
     anCar.body.velocity.y = 200
     anCar.body.velocity.x = carXVelocity
     this.carGroup.add(anCar)
-    setTimeout(_ => this.createCar(), Phaser.Math.Between(1000,2500))
-  }
-
-  createCoin() {
-    const coinXLocation = Math.floor(Math.random() * 1920) + 1
-    let coinXVelocity = Math.floor(Math.random()* 50) +1
-    coinXVelocity *= Math.round(Math.random()) ? 1 : -1
-    const anCoin = this.physics.add.sprite(coinXLocation, -100, 'coin')
-    anCoin.body.velocity.y = 200
-    anCoin.body.velocity.x = coinXVelocity
-    this.coinGroup.add(anCoin)
-    setTimeout(_ => this.createCoin(), Phaser.Math.Between(10000,25000))
+    setTimeout(_ => this.createCar(), Phaser.Math.Between(200,500))
   }
 
   constructor() {
@@ -33,11 +22,7 @@ class GameScene extends Phaser.Scene {
 
     this.background = null
     this.car = null
-    this.score = 0
-    this.scoreText = null
-    this.scoreTextStyle = {font:'65px Arial', fill: '#ffffff', align: 'center' }
     this.gameOverTextStyle = { font: '65px Arial', fill: '#ff0000', align: 'center' }
-    this.coin = null
   }
   /**  
   @param { object } data 
@@ -51,31 +36,17 @@ class GameScene extends Phaser.Scene {
     this.load.image("roadBackground","./asset/gameScene.jpg")
     this.load.image("car","./asset/car_black_1.png")
     this.load.image("otherCar", "asset/car_blue_1.png")
-    this.load.image("coin", "asset/coin_05.png")
   }
   /**@param {object} data */
   create(data) {
     this.background = this.add.image(0, 0, "roadBackground")
     this.background.setOrigin(0,0)
 
-    this.scoreText = this.add.text(10, 10, 'Score: ' + this.score.toString(), this.scoreTextStyle)
-
     this.car = this.physics.add.sprite(1920 / 2, 1080 - 100 , "car")
     this.car.setCollideWorldBounds(true)
 
-    this.coinGroup = this.add.group()
-    this.coinGroup.enableBody = true
-    this.createCoin()
-
     this.carGroup = this.add.group()
     this.createCar()
-
-    this.physics.add.collider(this.car, this.coinGroup,function(playerCollide, coinCollide) {
-      coinCollide.destroy() 
-      this.score = this.score + 1
-      this.scoreText.setText('Score: ' + this.score.toString())
-      this.createCar()
-    })
 
     this.physics.add.collider(this.car, this.carGroup, function (carCollide, othercarCollide) {
       this.physics.pause()
@@ -85,6 +56,11 @@ class GameScene extends Phaser.Scene {
       this.gameOverText.setInteractive({useHandCursor:true})
       this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
     }.bind(this)) 
+
+    this.startTime = new Date()
+    this.totalTime = 120
+    this.creatTimer()
+    this.updateTimer()
   }
 
   /**
@@ -108,6 +84,32 @@ class GameScene extends Phaser.Scene {
         this.car.x = 1920
       }
     }
+    if (this.timeElapsed >= this.totalTime){
+      this.gameOverText=this.add.text(1920/2, 1080/2, 'Congratulation\nClick to play again', this.gameOverTextStyle).setOrigin(0.5)
+      this.gameOverText.setInteractive({useHandCursor:true})
+      this.gameOverText.on('pointerdown', () => this.scene.start('gameScene'))
+    }
+  }
+  creatTimer() {
+    this.timeLabel = this.add.text(this.game.world, 100, "00:00",{font:"100px Arial", fill: "#000000"})
+    this.timeLabel.setOrigin(0,0)
+    this.timeLabel.align = 'center'
+  }
+
+  updateTimer() {
+    let currentTime = new Date()
+    let timeDifference = this.startTime.getTime() - currentTime.getTime()
+
+    this.timeElapsed = Math.abs(timeDifference/1000)
+
+    let timeRemaining = this.totalTime - this.timeElapsed
+
+    let minute = Math.floor(timeRemaining/60)
+    let second = Math.floor(timeRemaining) - (60 * minute)
+
+    let result = (minute<10) ? ":0" + second : ":" + second
+
+    this.timeLabel.text = result
   }
 }
 

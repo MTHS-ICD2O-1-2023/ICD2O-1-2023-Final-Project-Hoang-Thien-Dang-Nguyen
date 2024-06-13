@@ -9,7 +9,7 @@ class MenuScene extends Phaser.Scene {
     constructor() {
       super({ key: "menuScene" })
       this.menuSceneBackgroundImage = null
-      this.gameStartTextStyle = { font: '40px Arial', fill: '#000000', align: 'center' }
+      this.gameStartTextStyle = { font: '40px Arial', fill: '#F0F0F0', align: 'center' }
   
     }
     /**  
@@ -21,7 +21,7 @@ class MenuScene extends Phaser.Scene {
   
     preload() {
       console.log("Menu Scene")
-      this.load.image("menuSceneBackground", "./asset/backgroundMenuScene.png")
+      this.load.image("menuSceneBackground", "./asset/menuScene.png")
     }
     /**@param {object} data */
     create(data) {
@@ -29,7 +29,7 @@ class MenuScene extends Phaser.Scene {
       this.menuSceneBackgroundImage.x = 1920/2
       this.menuSceneBackgroundImage.y = 1080/2
   
-      this.gameStartText = this.add.text(1920/2, 1080/2 +100, "-Click anywhere to start a game-", this.gameStartTextStyle).setOrigin(0.5)
+      this.gameStartText = this.add.text(1920/2, 1080/2 +400, "-Click anywhere to start a game-", this.gameStartTextStyle).setOrigin(0.5)
       this.gameStartText.setInteractive({useHandCursor:true})
       this.gameStartText.on("pointerdown", () => this.scene.start('gameScene'))
     }
