@@ -14,7 +14,7 @@ class GameScene extends Phaser.Scene {
     anCar.body.velocity.y = 200
     anCar.body.velocity.x = carXVelocity
     this.carGroup.add(anCar)
-    setTimeout(_ => this.createCar(), Phaser.Math.Between(500,1000))
+    setTimeout(_ => this.createCar(), Phaser.Math.Between(500,500))
   }
 
   constructor() {
@@ -36,9 +36,12 @@ class GameScene extends Phaser.Scene {
     console.log("Game Scene")
     this.load.image("car","./asset/car_black_1.png")
     this.load.image("otherCar", "asset/car_blue_1.png")
+    this.load.image("background", "./asset/gameSceneBackGround.png")
   }
   /**@param {object} data */
   create(data) {
+    this.background = this.add.image(0, 0, "background").setScale(2.5)
+    this.background.setOrigin(0,0)
 
     this.car = this.physics.add.sprite(1920 / 2, 1080 - 100 , "car")
     this.car.setCollideWorldBounds(true)
@@ -56,7 +59,7 @@ class GameScene extends Phaser.Scene {
     }.bind(this)) 
 
     this.startTime = new Date()
-    this.totalTime = 120
+    this.totalTime = 30
     this.creatTimer()
     this.updateTimer()
   }
