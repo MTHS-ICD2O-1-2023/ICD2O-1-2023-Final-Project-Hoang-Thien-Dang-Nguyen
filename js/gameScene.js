@@ -14,7 +14,7 @@ class GameScene extends Phaser.Scene {
     anCar.body.velocity.y = 200
     anCar.body.velocity.x = carXVelocity
     this.carGroup.add(anCar)
-    setTimeout(_ => this.createCar(), Phaser.Math.Between(500,500))
+    setTimeout(_ => this.createCar(), Phaser.Math.Between(500,1000))
   }
 
   constructor() {
@@ -91,6 +91,7 @@ class GameScene extends Phaser.Scene {
       this.gameEndText=this.add.text(1920/2, 1080/2, 'Congratulation you won the game!!!\nClick to play again', this.gameEndTextStyle).setOrigin(0.5)
       this.gameEndText.setInteractive({useHandCursor:true})
       this.gameEndText.on('pointerdown', () => this.scene.start('gameScene'))
+      
     }
   }
   
